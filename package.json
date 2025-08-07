@@ -1,0 +1,42 @@
+{
+  "name": "universal-image-converter",
+  "version": "2.0.0",
+  "description": "A comprehensive SEO-optimized image converter supporting 25+ formats with mobile-responsive design",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "npm install",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "image",
+    "converter",
+    "imagemagick",
+    "pdf",
+    "format-conversion",
+    "jpg-to-png",
+    "png-to-jpg",
+    "heic-converter",
+    "webp-converter",
+    "image-processing",
+    "free-converter",
+    "online-converter"
+  ],
+  "author": "Universal Image Converter",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^2.0.2",
+    "pdfkit": "^0.13.0",
+    "sharp": "^0.34.3",
+    "compression": "^1.7.4"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/universal-image-converter"
+  },
+  "homepage": "https://yourdomain.com"
+}
