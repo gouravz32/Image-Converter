@@ -126,13 +126,31 @@
     const { useState, useEffect } = React;
 
     function ImageConverter() {
+      // Footer quick-select for popular conversions (works for both single and batch)
+      const handlePopularConversion = (format) => {
+        if (conversionMode === 'batch') {
+          setBatchTargetFormat(format);
+          // Scroll to batch section
+          setTimeout(() => {
+            const el = document.querySelector('label[for="batchFileInput"]')?.closest('.bg-white');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        } else {
+          setConversionMode('single');
+          setTargetFormat(format);
+          // Scroll to single file section
+          setTimeout(() => {
+            const el = document.querySelector('label[for="fileInput"]')?.closest('.bg-white');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        }
+      };
       const [file, setFile] = useState(null);
       const [targetFormat, setTargetFormat] = useState('');
       const [status, setStatus] = useState('');
       const [downloadUrl, setDownloadUrl] = useState('');
       const [isConverting, setIsConverting] = useState(false);
       const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-      
       // Batch conversion states
       const [batchFiles, setBatchFiles] = useState([]);
       const [batchTargetFormat, setBatchTargetFormat] = useState('');
@@ -280,13 +298,12 @@
       return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
           {/* SEO-Optimized Header with Navigation */}
-          <header className="bg-blue-600 text-white shadow-lg relative">
+          <header className="bg-blue-600 text-white shadow-lg relative dark:bg-gray-900 dark:text-gray-100">
             <nav className="container mx-auto px-4 py-4 md:py-6">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
-                  <h1 className="text-xl md:text-3xl font-bold">Snap2Format</h1>
+                  <a href="/" className="text-xl md:text-3xl font-bold hover:text-blue-200 transition-colors dark:hover:text-blue-400" aria-label="Home">Snap2Format</a>
                 </div>
-                
                 {/* Mobile Menu Button */}
                 <button 
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -304,28 +321,28 @@
                 
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex space-x-6">
-                  <a href="/" className="hover:text-blue-200 transition-colors">Home</a>
-                  <a href="/about.html" className="hover:text-blue-200 transition-colors">About</a>
-                  <a href="#faq" onClick={(e) => { e.preventDefault(); document.getElementById('faq').scrollIntoView({ behavior: 'smooth' }); }} className="hover:text-blue-200 transition-colors cursor-pointer">FAQ</a>
-                  <a href="/contact.html" className="hover:text-blue-200 transition-colors">Contact</a>
+                  <a href="/" className="hover:text-blue-200 transition-colors dark:hover:text-blue-400">Home</a>
+                  <a href="/about.html" className="hover:text-blue-200 transition-colors dark:hover:text-blue-400">About</a>
+                  <a href="#faq" onClick={(e) => { e.preventDefault(); document.getElementById('faq').scrollIntoView({ behavior: 'smooth' }); }} className="hover:text-blue-200 transition-colors cursor-pointer dark:hover:text-blue-400">FAQ</a>
+                  <a href="/contact.html" className="hover:text-blue-200 transition-colors dark:hover:text-blue-400">Contact</a>
                 </div>
               </div>
               
               {/* Mobile Navigation */}
               {isMobileMenuOpen && (
                 <div className="md:hidden mt-4 pb-2 border-t border-blue-500 pt-4">
-                  <a href="/" className="block py-2 hover:text-blue-200 transition-colors">Home</a>
-                  <a href="/about.html" className="block py-2 hover:text-blue-200 transition-colors">About</a>
-                  <a href="#faq" onClick={(e) => { e.preventDefault(); document.getElementById('faq').scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }} className="block py-2 hover:text-blue-200 transition-colors">FAQ</a>
-                  <a href="/contact.html" className="block py-2 hover:text-blue-200 transition-colors">Contact</a>
+                  <a href="/" className="block py-2 hover:text-blue-200 transition-colors dark:hover:text-blue-400">Home</a>
+                  <a href="/about.html" className="block py-2 hover:text-blue-200 transition-colors dark:hover:text-blue-400">About</a>
+                  <a href="#faq" onClick={(e) => { e.preventDefault(); document.getElementById('faq').scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }} className="block py-2 hover:text-blue-200 transition-colors dark:hover:text-blue-400">FAQ</a>
+                  <a href="/contact.html" className="block py-2 hover:text-blue-200 transition-colors dark:hover:text-blue-400">Contact</a>
                 </div>
               )}
             </nav>
             
             {/* Hero Section */}
             <div className="container mx-auto px-4 pb-8 text-center">
-              <h2 className="text-lg md:text-xl text-blue-100 mt-2">Convert Images to Any Format - Free, Fast & Secure</h2>
-              <p className="text-sm md:text-base text-blue-200 mt-1">Support for 25+ formats including JPG, PNG, PDF, WEBP, HEIC, RAW & more</p>
+              <h2 className="text-lg md:text-xl text-blue-100 mt-2 dark:text-blue-200">Convert Images to Any Format - Free, Fast & Secure</h2>
+              <p className="text-sm md:text-base text-blue-200 mt-1 dark:text-blue-300">Support for 25+ formats including JPG, PNG, PDF, WEBP, HEIC, RAW & more</p>
             </div>
           </header>
 
@@ -781,10 +798,10 @@
                 <div>
                   <h4 className="font-semibold mb-3">Popular Conversions</h4>
                   <ul className="space-y-2 text-sm">
-                    <li><a href="#" className="text-gray-300 hover:text-white transition-colors">JPG to PNG</a></li>
-                    <li><a href="#" className="text-gray-300 hover:text-white transition-colors">PNG to JPG</a></li>
-                    <li><a href="#" className="text-gray-300 hover:text-white transition-colors">HEIC to JPG</a></li>
-                    <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Image to PDF</a></li>
+                    <li><a href="#" className="text-gray-300 hover:text-white transition-colors" onClick={(e) => { e.preventDefault(); handlePopularConversion('png'); }}>JPG to PNG</a></li>
+                    <li><a href="#" className="text-gray-300 hover:text-white transition-colors" onClick={(e) => { e.preventDefault(); handlePopularConversion('jpg'); }}>PNG to JPG</a></li>
+                    <li><a href="#" className="text-gray-300 hover:text-white transition-colors" onClick={(e) => { e.preventDefault(); handlePopularConversion('jpg'); }}>HEIC to JPG</a></li>
+                    <li><a href="#" className="text-gray-300 hover:text-white transition-colors" onClick={(e) => { e.preventDefault(); handlePopularConversion('pdf'); }}>Image to PDF</a></li>
                   </ul>
                 </div>
                 
