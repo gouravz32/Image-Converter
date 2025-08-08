@@ -1,7 +1,7 @@
 {
-  "name": "universal-image-converter",
+  "name": "snap2format",
   "version": "3.0.0",
-  "description": "A comprehensive SEO-optimized image converter supporting 25+ formats with batch conversion, ZIP downloads, and mobile-responsive design",
+  "description": "A comprehensive SEO-optimized image converter supporting 25+ formats with batch conversion, ZIP downloads, and mobile-responsive design - Snap2Format.com",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,6 +9,7 @@
     "dev": "node server.js"
   },
   "keywords": [
+    "snap2format",
     "image",
     "converter",
     "batch-conversion",
@@ -25,7 +26,7 @@
     "free-converter",
     "online-converter"
   ],
-  "author": "Universal Image Converter",
+  "author": "Snap2Format",
   "license": "MIT",
   "dependencies": {
     "archiver": "^7.0.1",
@@ -40,7 +41,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/universal-image-converter"
+    "url": "https://github.com/yourusername/snap2format"
   },
-  "homepage": "https://yourdomain.com"
+  "homepage": "https://snap2format.com"
 }
