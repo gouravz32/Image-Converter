@@ -194,7 +194,7 @@ Add structured data to your FAQ section:
     "name": "What image formats can I convert?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Our converter supports 25+ formats including JPG, PNG, GIF, BMP, WEBP, TIFF, PDF, HEIF/HEIC, AVIF, SVG, EPS, AI, PSD, XCF, CDR, and various RAW formats."
+      "text": "Our converter supports 20+ formats including JPG, PNG, GIF, BMP, WEBP, TIFF, PDF, HEIF/HEIC, AVIF, SVG, EPS, AI, PSD, XCF, CDR, and various RAW formats."
     }
   }]
 }
@@ -214,7 +214,7 @@ Add structured data to your FAQ section:
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "Universal Image Converter",
-  "description": "Free online image converter supporting 25+ formats",
+  "description": "Free online image converter supporting 20+ formats",
   "url": "https://yourdomain.com",
   "telephone": "+1-XXX-XXX-XXXX",
   "address": {

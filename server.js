@@ -7,14 +7,16 @@ const PDFDocument = require('pdfkit');
 const sharp = require('sharp');
 const compression = require('compression');
 const archiver = require('archiver');
+const util = require('util');
+const execPromise = util.promisify(exec);
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 
-// Enable gzip compression
 app.use(compression());
+app.use(express.static(path.join(__dirname)));
+app.use(express.json());
 
-// Add security headers
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
@@ -22,100 +24,289 @@ app.use((req, res, next) => {
   next();
 });
 
-// Ensure directories exist
 const uploadDir = 'uploads';
 const outputDir = 'converted';
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
 
-// Serve static files
-app.use(express.static(path.join(__dirname)));
-app.use(express.json());
-
-// IMPORTANT: Serve converted files for download
 app.use('/downloads', express.static(path.join(__dirname, 'converted'), {
   maxAge: '2h'
 }));
 
-// Helper function for file conversion
-async function processFileConversion(inputFile, outputFile, targetFormat, fileInfo) {
-  return new Promise((resolve, reject) => {
-    // Special handling for PDF
-    if (targetFormat === 'pdf') {
-      const doc = new PDFDocument();
-      const stream = fs.createWriteStream(outputFile);
-      doc.pipe(stream);
-      doc.image(inputFile, { fit: [500, 500], align: 'center', valign: 'center' });
-      doc.end();
-      stream.on('finish', () => {
-        fs.unlinkSync(inputFile);
-        resolve();
-      });
-      stream.on('error', reject);
-      return;
-    }
+// Check ImageMagick delegates
+async function checkImageMagickSupport() {
+  try {
+    const { stdout } = await execPromise('magick -list format');
+    const formats = stdout.toLowerCase();
+    return {
+      heif: formats.includes('heif'),
+      heic: formats.includes('heic'),
+      svg: formats.includes('svg'),
+      eps: formats.includes('eps'),
+      psd: formats.includes('psd'),
+      djvu: formats.includes('djvu'),
+      ico: formats.includes('ico')
+    };
+  } catch (error) {
+    console.error('Could not check ImageMagick support:', error);
+    return {};
+  }
+}
 
-    // Use Sharp for common formats
-    const supportedBySharp = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'tiff', 'tif', 'avif'];
-    
-    if (supportedBySharp.includes(targetFormat)) {
-      processWithSharp();
-    } else {
-      // Try ImageMagick for other formats
-      useImageMagick();
+// Initialize and check supported formats
+let supportedFormats = {};
+checkImageMagickSupport().then(formats => {
+  supportedFormats = formats;
+  console.log('ImageMagick format support:', supportedFormats);
+});
+
+// Enhanced conversion function
+async function processFileConversion(inputFile, outputFile, targetFormat, fileInfo) {
+  targetFormat = targetFormat.toLowerCase();
+  
+  // First, try to convert input to a standard format if it's exotic
+  let processedInput = inputFile;
+  const inputExt = path.extname(fileInfo.originalname).toLowerCase().slice(1);
+  
+  // List of formats that need pre-processing
+  const needsPreprocessing = ['heif', 'heic', 'psd', 'xcf', 'cdr', 'djvu'];
+  
+  if (needsPreprocessing.includes(inputExt)) {
+    console.log(`Pre-processing ${inputExt} to PNG first...`);
+    const tempFile = inputFile + '_temp.png';
+    try {
+      await convertToIntermediateFormat(inputFile, tempFile, inputExt);
+      processedInput = tempFile;
+    } catch (error) {
+      console.log('Pre-processing failed, trying direct conversion...');
     }
-    
-    async function processWithSharp() {
-      try {
-        let sharpInstance = sharp(inputFile);
-        
-        switch (targetFormat) {
-          case 'jpg':
-          case 'jpeg':
-            await sharpInstance.jpeg({ quality: 90, progressive: true }).toFile(outputFile);
-            break;
-          case 'png':
-            await sharpInstance.png({ compressionLevel: 6, progressive: true }).toFile(outputFile);
-            break;
-          case 'webp':
-            await sharpInstance.webp({ quality: 90, lossless: false }).toFile(outputFile);
-            break;
-          case 'tiff':
-          case 'tif':
-            await sharpInstance.tiff({ compression: 'lzw' }).toFile(outputFile);
-            break;
-          case 'avif':
-            await sharpInstance.avif({ quality: 90 }).toFile(outputFile);
-            break;
-          case 'gif':
-            // Sharp doesn't support GIF output well, convert to PNG
-            await sharpInstance.png().toFile(outputFile);
-            break;
-          default:
-            await sharpInstance.toFile(outputFile);
-        }
-        
-        fs.unlinkSync(inputFile);
+  }
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      // PDF handling
+      if (targetFormat === 'pdf') {
+        await convertToPDF(processedInput, outputFile);
+        cleanup(inputFile, processedInput);
         resolve();
-      } catch (sharpError) {
-        console.error('Sharp conversion error:', sharpError);
-        useImageMagick();
+        return;
       }
-    }
-    
-    function useImageMagick() {
-      const command = `magick "${inputFile}" "${outputFile}"`;
-      exec(command, (error) => {
-        fs.unlinkSync(inputFile);
-        
-        if (error) {
-          console.error('ImageMagick conversion error:', error);
-          return reject(new Error(`Conversion to ${targetFormat} failed. Make sure ImageMagick is installed for this format.`));
+
+      // Try Sharp first for supported formats
+      const sharpFormats = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'tiff', 'tif', 'avif'];
+      
+      if (sharpFormats.includes(targetFormat)) {
+        try {
+          await processWithSharp(processedInput, outputFile, targetFormat);
+          cleanup(inputFile, processedInput);
+          resolve();
+          return;
+        } catch (sharpError) {
+          console.log('Sharp failed, trying ImageMagick...');
         }
-        resolve();
-      });
+      }
+
+      // Use ImageMagick for everything else
+      await processWithImageMagick(processedInput, outputFile, targetFormat);
+      cleanup(inputFile, processedInput);
+      resolve();
+      
+    } catch (error) {
+      cleanup(inputFile, processedInput);
+      reject(error);
     }
   });
+}
+
+// Convert exotic formats to intermediate PNG
+async function convertToIntermediateFormat(input, output, inputFormat) {
+  let command = '';
+  
+  switch (inputFormat) {
+    case 'heif':
+    case 'heic':
+      // Try multiple methods for HEIF/HEIC
+      command = `magick "${input}" "${output}" || magick convert "${input}" "${output}"`;
+      break;
+    case 'psd':
+      command = `magick "${input}[0]" -flatten "${output}"`;
+      break;
+    case 'xcf':
+      command = `magick "${input}" -flatten "${output}"`;
+      break;
+    case 'djvu':
+      // DJVU might need special handling
+      command = `magick "${input}" "${output}"`;
+      break;
+    case 'cdr':
+      // CDR has very limited support
+      command = `magick "${input}" "${output}"`;
+      break;
+    default:
+      command = `magick "${input}" "${output}"`;
+  }
+  
+  const { stdout, stderr } = await execPromise(command);
+  if (stderr && !stderr.includes('Warning')) {
+    throw new Error(stderr);
+  }
+}
+
+// Sharp processing
+async function processWithSharp(input, output, format) {
+  let sharpInstance = sharp(input);
+
+  switch (format) {
+    case 'jpg':
+    case 'jpeg':
+      await sharpInstance.jpeg({ quality: 90, progressive: true }).toFile(output);
+      break;
+    case 'png':
+      await sharpInstance.png({ compressionLevel: 6, progressive: true }).toFile(output);
+      break;
+    case 'webp':
+      await sharpInstance.webp({ quality: 90 }).toFile(output);
+      break;
+    case 'tiff':
+    case 'tif':
+      await sharpInstance.tiff({ compression: 'lzw' }).toFile(output);
+      break;
+    case 'avif':
+      await sharpInstance.avif({ quality: 90 }).toFile(output);
+      break;
+    case 'gif':
+      // Convert to PNG first, then rename
+      const tempPath = output.replace('.gif', '_temp.png');
+      await sharpInstance.png().toFile(tempPath);
+      fs.renameSync(tempPath, output);
+      break;
+    default:
+      await sharpInstance.toFile(output);
+  }
+}
+
+// ImageMagick processing with better error handling
+async function processWithImageMagick(input, output, format) {
+  let command = '';
+  
+  // Build format-specific commands
+  switch (format) {
+    case 'ico':
+      // ICO with multiple resolutions
+      command = `magick "${input}" -resize 256x256 -define icon:auto-resize=256,128,64,48,32,16 "${output}"`;
+      break;
+      
+    case 'svg':
+      // Convert to SVG (limited support for raster to vector)
+      command = `magick "${input}" "${output}"`;
+      break;
+      
+    case 'eps':
+    case 'ai':
+      // PostScript formats
+      command = `magick "${input}" -compress lzw "${output}"`;
+      break;
+      
+    case 'heif':
+    case 'heic':
+      // HEIF/HEIC - might need special handling
+      command = `magick "${input}" -quality 90 "${output}"`;
+      break;
+      
+    case 'psd':
+      // Photoshop format
+      command = `magick "${input}" "${output}"`;
+      break;
+      
+    case 'xcf':
+      // GIMP format - very limited write support
+      command = `magick "${input}" "${output}"`;
+      break;
+      
+      
+    case 'djvu':
+      // DJVU - very limited support
+      command = `magick "${input}" "${output}"`;
+      break;
+      
+    case 'cdr':
+      // CorelDRAW - very limited support
+      command = `magick "${input}" "${output}"`;
+      break;
+      
+    case 'bmp':
+      command = `magick "${input}" -compress none "${output}"`;
+      break;
+      
+    default:
+      command = `magick "${input}" -quality 90 "${output}"`;
+  }
+
+  try {
+    console.log('Executing:', command);
+    const { stdout, stderr } = await execPromise(command);
+    
+    // Check if output file was created
+    if (!fs.existsSync(output)) {
+      throw new Error(`Output file was not created. Format ${format} might not be supported for writing.`);
+    }
+    
+    console.log('Conversion successful');
+  } catch (error) {
+    console.error('ImageMagick error:', error.message);
+    
+    // Provide helpful error messages
+    if (error.message.includes('no encode delegate')) {
+      throw new Error(`Format ${format.toUpperCase()} is not supported for writing. This format requires additional libraries that are not installed. Try converting to a common format like JPG, PNG, or PDF.`);
+    } else if (error.message.includes('no decode delegate')) {
+      throw new Error(`Cannot read the input file format. Make sure the file is a valid image.`);
+    } else {
+      throw error;
+    }
+  }
+}
+
+// PDF conversion
+async function convertToPDF(input, output) {
+  const doc = new PDFDocument();
+  const stream = fs.createWriteStream(output);
+  doc.pipe(stream);
+  
+  try {
+    doc.image(input, { 
+      fit: [500, 500], 
+      align: 'center', 
+      valign: 'center' 
+    });
+  } catch (error) {
+    // If PDFKit can't read the image, try converting to PNG first
+    const tempPng = input + '_pdf_temp.png';
+    await execPromise(`magick "${input}" "${tempPng}"`);
+    doc.image(tempPng, { 
+      fit: [500, 500], 
+      align: 'center', 
+      valign: 'center' 
+    });
+    if (fs.existsSync(tempPng)) {
+      fs.unlinkSync(tempPng);
+    }
+  }
+  
+  doc.end();
+  
+  return new Promise((resolve) => {
+    stream.on('finish', resolve);
+  });
+}
+
+// Cleanup temporary files
+function cleanup(originalFile, processedFile) {
+  if (fs.existsSync(originalFile)) {
+    fs.unlinkSync(originalFile);
+  }
+  if (processedFile !== originalFile && fs.existsSync(processedFile)) {
+    fs.unlinkSync(processedFile);
+  }
 }
 
 // Single file conversion endpoint
@@ -129,12 +320,32 @@ app.post('/api/convert', upload.single('file'), async (req, res) => {
   const outputFileName = `output-${Date.now()}.${targetFormat}`;
   const outputFile = path.join(outputDir, outputFileName);
 
+  // Check for read-only formats
+  const readOnlyFormats = [];
+  if (readOnlyFormats.includes(targetFormat)) {
+    fs.unlinkSync(inputFile);
+    return res.status(400).send(`Cannot convert TO ${targetFormat.toUpperCase()} format. This format is typically read-only. Try converting FROM ${targetFormat.toUpperCase()} to JPG, PNG, or TIFF instead.`);
+  }
+
+  // Provide warnings for limited support formats
+  const limitedFormats = ['xcf', 'cdr', 'djvu'];
+  if (limitedFormats.includes(targetFormat)) {
+    console.warn(`Warning: ${targetFormat.toUpperCase()} has limited support and may not work properly.`);
+  }
+
   try {
     await processFileConversion(inputFile, outputFile, targetFormat, req.file);
     res.json({ downloadUrl: `/downloads/${outputFileName}` });
   } catch (error) {
     console.error('Conversion error:', error);
-    res.status(500).send('Conversion failed: ' + error.message);
+    
+    // Provide user-friendly error messages
+    let errorMessage = error.message;
+    if (errorMessage.includes('no encode delegate')) {
+      errorMessage = `Format ${targetFormat.toUpperCase()} is not supported for conversion. This format requires additional software that is not installed. Please try converting to JPG, PNG, PDF, or another common format.`;
+    }
+    
+    res.status(500).send('Conversion failed: ' + errorMessage);
   }
 });
 
@@ -145,6 +356,16 @@ app.post('/api/convert-batch', upload.array('files', 20), async (req, res) => {
   }
 
   const targetFormat = req.body.targetFormat.toLowerCase();
+  
+  // Check for read-only formats
+  const readOnlyFormats = [];
+  if (readOnlyFormats.includes(targetFormat)) {
+    req.files.forEach(file => fs.unlinkSync(file.path));
+    return res.status(400).json({ 
+      error: `Cannot convert TO ${targetFormat.toUpperCase()} format. This format is read-only.` 
+    });
+  }
+
   const results = [];
   const errors = [];
 
@@ -179,7 +400,7 @@ app.post('/api/convert-batch', upload.array('files', 20), async (req, res) => {
   });
 });
 
-// ZIP download endpoint for batch files
+// ZIP download endpoint
 app.post('/api/download-batch-zip', async (req, res) => {
   const { fileUrls, zipName } = req.body;
   const zipFileName = `${zipName}.zip`;
@@ -199,7 +420,6 @@ app.post('/api/download-batch-zip', async (req, res) => {
 
   archive.pipe(output);
 
-  // Add files to archive
   fileUrls.forEach((url, index) => {
     const fileName = url.split('/').pop();
     const filePath = path.join(outputDir, fileName);
@@ -211,28 +431,33 @@ app.post('/api/download-batch-zip', async (req, res) => {
   archive.finalize();
 });
 
-// Serve other static pages
+// Static pages routes
 app.get('/about.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'about.html'));
 });
-
 app.get('/privacy.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'privacy.html'));
 });
-
 app.get('/terms.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'terms.html'));
 });
-
 app.get('/contact.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'contact.html'));
 });
 
-// Cleanup old files every hour
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'healthy', 
+    supportedFormats: supportedFormats,
+    timestamp: new Date().toISOString() 
+  });
+});
+
+// Cleanup old files
 setInterval(() => {
   const now = Date.now();
   const maxAge = 2 * 60 * 60 * 1000; // 2 hours
-  
   [uploadDir, outputDir].forEach(dir => {
     if (fs.existsSync(dir)) {
       fs.readdirSync(dir).forEach((file) => {
@@ -251,11 +476,12 @@ setInterval(() => {
   });
 }, 60 * 60 * 1000);
 
-// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Image Converter running on port ${PORT}`);
+  console.log(`🚀 Snap2Format Image Converter running on port ${PORT}`);
   console.log(`📍 Visit http://localhost:${PORT} to start converting images`);
-  console.log(`\n✅ Real image conversion enabled with Sharp!`);
-  console.log(`📁 Converted files will be saved in: ${path.join(__dirname, 'converted')}`);
+  console.log(`\n⚠️  Note: Some formats have limitations:`);
+  console.log(`   - DJVU, XCF, CDR have limited support`);
+  console.log(`   - HEIF/HEIC need additional libraries`);
+  console.log(`\n💡 For best results, convert TO common formats like JPG, PNG, PDF, WEBP`);
 });

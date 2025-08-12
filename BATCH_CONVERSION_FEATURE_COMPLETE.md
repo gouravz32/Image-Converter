@@ -4,7 +4,7 @@
 
 ### 🔥 **Batch/Multiple Image Conversion**
 - **Convert up to 20 images simultaneously**
-- **Support for all existing 25+ formats**
+- **Support for all existing 20+ formats**
 - **Real-time progress tracking**
 - **Individual file status reporting**
 
@@ -155,7 +155,7 @@
 
 🔥 **SINGLE FILE CONVERSION**: Quick, one-at-a-time conversion
 🔥 **BATCH CONVERSION**: Multiple files, multiple possibilities  
-🔥 **25+ IMAGE FORMATS**: From JPG to RAW, PDF to HEIC
+🔥 **20+ IMAGE FORMATS**: From JPG to RAW, PDF to HEIC
 🔥 **ZIP DOWNLOADS**: Convenient archive packaging
 🔥 **MOBILE-FIRST DESIGN**: Works everywhere
 🔥 **LIGHTNING FAST**: Optimized for speed

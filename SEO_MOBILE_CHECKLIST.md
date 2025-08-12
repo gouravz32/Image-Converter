@@ -56,7 +56,7 @@
 - `GET /about.html` - About page
 - `GET /downloads/*` - File download with caching
 
-### Format Support (25+ formats)
+### Format Support (20+ formats)
 - **Common**: JPG, PNG, GIF, BMP, WEBP
 - **High Quality**: TIFF, TIF, PDF, EPS, SVG
 - **Modern**: HEIF, HEIC, AVIF

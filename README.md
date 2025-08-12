@@ -74,7 +74,7 @@ Navigate to: http://localhost:3000
 
 ## 🎨 Features
 
-- **25+ Format Support**: From common JPG/PNG to professional RAW/PSD
+- **20+ Format Support**: From common JPG/PNG to professional RAW/PSD
 - **Drag & Drop Interface**: Modern, responsive design
 - **Real-time Progress**: Visual feedback during conversion
 - **Auto Cleanup**: Files deleted after 2 hours for privacy
