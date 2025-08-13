@@ -1,11 +1,12 @@
 # Use Node.js 20 Alpine for smaller image size
 FROM node:20-alpine
 
-# Install ImageMagick and required dependencies
+# Install ImageMagick, potrace, and required dependencies
 RUN apk update && apk add --no-cache \
     imagemagick \
     imagemagick-dev \
     imagemagick-libs \
+    potrace \
     libheif \
     libwebp \
     libwebp-tools \
@@ -22,7 +23,10 @@ RUN apk update && apk add --no-cache \
     cairo-dev \
     jpeg-dev \
     pango-dev \
-    giflib-dev
+    giflib-dev \
+    inkscape \
+    fontconfig \
+    ttf-dejavu
 
 # Create app directory
 WORKDIR /app
