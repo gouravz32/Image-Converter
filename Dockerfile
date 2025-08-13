@@ -1,7 +1,7 @@
 # Use Node.js 20 Alpine for smaller image size
 FROM node:20-alpine
 
-# Install ImageMagick, potrace, and required dependencies
+# Install all required dependencies including potrace
 RUN apk update && apk add --no-cache \
     imagemagick \
     imagemagick-dev \
@@ -24,7 +24,6 @@ RUN apk update && apk add --no-cache \
     jpeg-dev \
     pango-dev \
     giflib-dev \
-    inkscape \
     fontconfig \
     ttf-dejavu
 
