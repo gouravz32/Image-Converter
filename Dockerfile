@@ -1,26 +1,49 @@
-# Official Node.js image
-FROM node:18
+# Use Node.js 20 Alpine for smaller image size
+FROM node:20-alpine
 
-# Install dependencies (including ImageMagick)
-RUN apt-get update && apt-get install -y \
+# Install ImageMagick and required dependencies
+RUN apk update && apk add --no-cache \
     imagemagick \
-    libheif-examples \
-    libheif-dev \
-    libavif-dev \
-    && rm -rf /var/lib/apt/lists/*
+    imagemagick-dev \
+    imagemagick-libs \
+    libheif \
+    libwebp \
+    libwebp-tools \
+    libjpeg-turbo \
+    libjpeg-turbo-utils \
+    libpng \
+    tiff \
+    giflib \
+    librsvg \
+    ghostscript \
+    python3 \
+    make \
+    g++ \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    giflib-dev
 
-# Set working directory
+# Create app directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy package files
 COPY package*.json ./
-RUN npm install
 
-# Copy all files
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy app source
 COPY . .
+
+# Create required directories
+RUN mkdir -p uploads converted
+
+# Set environment
+ENV NODE_ENV=production
 
 # Expose port
 EXPOSE 3000
 
-# Start the app
+# Start the application
 CMD ["node", "server.js"]

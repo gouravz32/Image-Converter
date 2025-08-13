@@ -5,26 +5,12 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "npm install",
-    "dev": "node server.js"
+    "build": "npm install"
   },
   "keywords": [
     "snap2format",
     "image",
-    "converter",
-    "batch-conversion",
-    "multiple-files",
-    "zip-download",
-    "imagemagick",
-    "pdf",
-    "format-conversion",
-    "jpg-to-png",
-    "png-to-jpg",
-    "heic-converter",
-    "webp-converter",
-    "image-processing",
-    "free-converter",
-    "online-converter"
+    "converter"
   ],
   "author": "Snap2Format",
   "license": "MIT",
@@ -32,17 +18,11 @@
     "archiver": "^7.0.1",
     "compression": "^1.8.1",
     "express": "^4.18.2",
-    "imagemagick": "^0.1.3",
     "multer": "^2.0.2",
     "pdfkit": "^0.13.0",
     "sharp": "^0.34.3"
   },
   "engines": {
-    "node": ">=14.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/snap2format"
-  },
-  "homepage": "https://snap2format.com"
+    "node": ">=18.0.0"
+  }
 }
