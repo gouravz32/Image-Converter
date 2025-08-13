@@ -1,30 +1,29 @@
-# Base image
 FROM node:18-bullseye
 
-# Install ImageMagick + Extra libraries
+# Prevent prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install ImageMagick + delegates (HEIC/AVIF/PSD support)
 RUN apt-get update && apt-get install -y \
   imagemagick \
-  libheif-examples \
   libheif-dev \
-  libraw-dev \
+  libavif-dev \
+  libjpeg-dev \
+  libpng-dev \
+  libtiff-dev \
+  libwebp-dev \
   ghostscript \
+  poppler-utils \
   librsvg2-bin \
   && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json & package-lock.json
 COPY package*.json ./
+RUN npm install --production
 
-# Install dependencies
-RUN npm install
-
-# Copy project files
 COPY . .
 
-# Expose port (same as your app)
 EXPOSE 3000
 
-# Start command
 CMD ["npm", "start"]
