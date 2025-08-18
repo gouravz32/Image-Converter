@@ -683,8 +683,11 @@ app.get('/contact.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'contact.html'));
 });
 
-// Robots.txt
+// Dynamic Robots.txt
 app.get('/robots.txt', (req, res) => {
+  const host = req.get('host');
+  const protocol = req.protocol === 'http' && host.includes('onrender.com') ? 'https' : req.protocol;
+  
   res.type('text/plain');
   res.send(`User-agent: *
 Allow: /
@@ -693,37 +696,41 @@ Disallow: /uploads/
 Disallow: /converted/
 Crawl-delay: 1
 
-Sitemap: https://snap2format.com/sitemap.xml`);
+Sitemap: ${protocol}://${host}/sitemap.xml`);
 });
 
-// Sitemap
+// Dynamic Sitemap
 app.get('/sitemap.xml', (req, res) => {
+  const host = req.get('host');
+  const protocol = req.protocol === 'http' && host.includes('onrender.com') ? 'https' : req.protocol;
+  const baseUrl = `${protocol}://${host}`;
+  
   res.type('application/xml');
   res.send(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://snap2format.com/</loc>
+    <loc>${baseUrl}/</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://snap2format.com/about.html</loc>
+    <loc>${baseUrl}/about.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://snap2format.com/privacy.html</loc>
+    <loc>${baseUrl}/privacy.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://snap2format.com/terms.html</loc>
+    <loc>${baseUrl}/terms.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://snap2format.com/contact.html</loc>
+    <loc>${baseUrl}/contact.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
