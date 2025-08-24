@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Optimization for Web: Formats, Sizes & SEO | Snap2Format Blog</title>
+  <meta name="description" content="Learn how to optimize images for websites. Best formats, compression techniques, and SEO benefits of proper image optimization. Complete guide by Gourav Choudhary.">
+  <meta name="keywords" content="image optimization, web performance, seo images, image compression, website speed, image formats for web, lazy loading, responsive images">
+  <meta name="author" content="Gourav Choudhary">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://snap2format.onrender.com/blog/image-optimization-web">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Image Optimization for Web: Complete Guide 2025">
+  <meta property="og:description" content="Master image optimization for better web performance and SEO. Learn formats, compression, and best practices.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://snap2format.onrender.com/blog/image-optimization-web">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-blue-600 text-white shadow-lg sticky top-0 z-50">
+    <nav class="container mx-auto px-4 py-4 md:py-6">
+      <div class="flex justify-between items-center">
+        <a href="/" class="text-xl md:text-3xl font-bold hover:text-blue-200 transition-colors">Snap2Format</a>
+        <div class="hidden md:flex space-x-6">
+          <a href="/" class="hover:text-blue-200 transition-colors">Converter</a>
+          <a href="/blog.html" class="hover:text-blue-200 transition-colors font-semibold">Blog</a>
+          <a href="/about.html" class="hover:text-blue-200 transition-colors">About</a>
+          <a href="/contact.html" class="hover:text-blue-200 transition-colors">Contact</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 md:py-12">
+    <div class="max-w-4xl mx-auto">
+      <!-- Breadcrumb -->
+      <nav class="mb-6">
+        <a href="/" class="text-blue-600 hover:text-blue-800">Home</a>
+        <span class="mx-2 text-gray-500">/</span>
+        <a href="/blog.html" class="text-blue-600 hover:text-blue-800">Blog</a>
+        <span class="mx-2 text-gray-500">/</span>
+        <span class="text-gray-700">Image Optimization for Web</span>
+      </nav>
+
+      <!-- Article -->
+      <article class="bg-white rounded-lg shadow-lg p-6 md:p-10">
+        <!-- Article Header -->
+        <header class="mb-8">
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Image Optimization for Web: Formats, Sizes & SEO
+          </h1>
+          <div class="flex items-center text-sm text-gray-600 space-x-4">
+            <span>By Gourav Choudhary</span>
+            <span>•</span>
+            <time datetime="2025-01-10">January 10, 2025</time>
+            <span>•</span>
+            <span>10 min read</span>
+          </div>
+        </header>
+
+        <!-- Article Content -->
+        <div class="prose prose-lg max-w-none">
+          <!-- Introduction -->
+          <section class="mb-8">
+            <p class="text-lg text-gray-700 leading-relaxed">
+              Images are crucial for user engagement, but they're also the largest contributors to page weight. 
+              Proper image optimization can dramatically improve your website's loading speed, user experience, 
+              and search engine rankings. This comprehensive guide will teach you everything about optimizing 
+              images for the web.
+            </p>
+          </section>
+
+          <!-- Table of Contents -->
+          <section class="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">What You'll Learn</h2>
+            <ul class="space-y-2 text-gray-700">
+              <li>✅ Choosing the right image format for each use case</li>
+              <li>✅ Compression techniques without quality loss</li>
+              <li>✅ Responsive images and srcset implementation</li>
+              <li>✅ Lazy loading for better performance</li>
+              <li>✅ SEO best practices for images</li>
+              <li>✅ Tools and automation strategies</li>
+            </ul>
+          </section>
+
+          <!-- Section 1: Why Image Optimization Matters -->
+          <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Why Image Optimization Matters</h2>
+            
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+              <div class="bg-green-50 p-4 rounded-lg">
+                <h3 class="font-bold text-green-800 mb-2">🚀 Speed</h3>
+                <p class="text-sm text-gray-700">53% of mobile users abandon sites that take over 3 seconds to load</p>
+              </div>
+              <div class="bg-blue-50 p-4 rounded-lg">
+                <h3 class="font-bold text-blue-800 mb-2">📈 SEO</h3>
+                <p class="text-sm text-gray-700">Page speed is a direct Google ranking factor since 2018</p>
+              </div>
+              <div class="bg-purple-50 p-4 rounded-lg">
+                <h3 class="font-bold text-purple-800 mb-2">💰 Bandwidth</h3>
+                <p class="text-sm text-gray-700">Smaller images save bandwidth costs for you and your users</p>
+              </div>
+            </div>
+
+            <p class="text-gray-700 mb-4">
+              According to HTTP Archive, images make up on average 21% of a total webpage's weight. 
+              That's why optimizing them can have such a significant impact on your site's performance.
+            </p>
+          </section>
+
+          <!-- Section 2: Choosing the Right Format -->
+          <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Choosing the Right Image Format</h2>
+            
+            <div class="overflow-x-auto mb-6">
+              <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-sm font-bold text-gray-700 border-b">Format</th>
+                    <th class="px-4 py-3 text-left text-sm font-bold text-gray-700 border-b">Best For</th>
+                    <th class="px-4 py-3 text-left text-sm font-bold text-gray-700 border-b">Pros</th>
+                    <th class="px-4 py-3 text-left text-sm font-bold text-gray-700 border-b">Cons</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3 border-b font-semibold">JPEG/JPG</td>
+                    <td class="px-4 py-3 border-b">Photos, complex images</td>
+                    <td class="px-4 py-3 border-b text-sm">Small file size, universal support</td>
+                    <td class="px-4 py-3 border-b text-sm">No transparency, lossy compression</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3 border-b font-semibold">PNG</td>
+                    <td class="px-4 py-3 border-b">Logos, icons, screenshots</td>
+                    <td class="px-4 py-3 border-b text-sm">Transparency support, lossless</td>
+                    <td class="px-4 py-3 border-b text-sm">Larger file size for photos</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3 border-b font-semibold">WebP</td>
+                    <td class="px-4 py-3 border-b">Modern web, all purposes</td>
+                    <td class="px-4 py-3 border-b text-sm">25-35% smaller than JPG/PNG</td>
+                    <td class="px-4 py-3 border-b text-sm">Limited browser support (95%)</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3 border-b font-semibold">AVIF</td>
+                    <td class="px-4 py-3 border-b">Next-gen format</td>
+                    <td class="px-4 py-3 border-b text-sm">50% smaller than JPG</td>
+                    <td class="px-4 py-3 border-b text-sm">Limited support (70%)</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3 border-b font-semibold">SVG</td>
+                    <td class="px-4 py-3 border-b">Icons, logos, simple graphics</td>
+                    <td class="px-4 py-3 border-b text-sm">Scalable, tiny file size</td>
+                    <td class="px-4 py-3 border-b text-sm">Not suitable for photos</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
+              <p class="text-sm text-gray-700">
+                <strong>Pro Tip:</strong> Use the &lt;picture&gt; element to serve different formats based on browser support:
+              </p>
+              <pre class="bg-gray-800 text-white p-4 mt-3 rounded overflow-x-auto text-sm">
+&lt;picture&gt;
+  &lt;source srcset="image.avif" type="image/avif"&gt;
+  &lt;source srcset="image.webp" type="image/webp"&gt;
+  &lt;img src="image.jpg" alt="Description"&gt;
+&lt;/picture&gt;</pre>
+            </div>
+          </section>
+
+          <!-- Section 3: Compression Techniques -->
+          <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Image Compression Techniques</h2>
+            
+            <h3 class="text-xl font-semibold text-gray-700 mb-3">1. Lossy vs Lossless Compression</h3>
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+              <div class="border border-gray-200 rounded-lg p-4">
+                <h4 class="font-bold text-gray-800 mb-2">Lossy Compression</h4>
+                <p class="text-sm text-gray-600 mb-2">Removes some data permanently</p>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Best for: Photos, complex images</li>
+                  <li>• File size: 60-80% reduction</li>
+                  <li>• Quality: Slight degradation</li>
+                  <li>• Formats: JPEG, WebP (lossy mode)</li>
+                </ul>
+              </div>
+              <div class="border border-gray-200 rounded-lg p-4">
+                <h4 class="font-bold text-gray-800 mb-2">Lossless Compression</h4>
+                <p class="text-sm text-gray-600 mb-2">Preserves all original data</p>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Best for: Logos, text, screenshots</li>
+                  <li>• File size: 10-30% reduction</li>
+                  <li>• Quality: No degradation</li>
+                  <li>• Formats: PNG, WebP (lossless), GIF</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-700 mb-3">2. Optimal Quality Settings</h3>
+            <ul class="space-y-2 text-gray-700 mb-6">
+              <li><strong>JPEG:</strong> 85-90% quality for photos (balance between quality and file size)</li>
+              <li><strong>PNG:</strong> Use PNG-8 for simple graphics, PNG-24 for complex images with transparency</li>
+              <li><strong>WebP:</strong> 80-85% quality for lossy, lossless for graphics</li>
+            </ul>
+          </section>
+
+          <!-- Section 4: Responsive Images -->
+          <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Implementing Responsive Images</h2>
+            
+            <p class="text-gray-700 mb-4">
+              Responsive images ensure users download the right image size for their device, saving bandwidth 
+              and improving performance.
+            </p>
+
+            <h3 class="text-xl font-semibold text-gray-700 mb-3">Using srcset and sizes</h3>
+            <pre class="bg-gray-800 text-white p-4 rounded overflow-x-auto text-sm mb-6">
+&lt;img src="image-default.jpg"
+     srcset="image-320w.jpg 320w,
+             image-640w.jpg 640w,
+             image-1280w.jpg 1280w,
+             image-1920w.jpg 1920w"
+     sizes="(max-width: 320px) 280px,
+            (max-width: 640px) 600px,
+            (max-width: 1280px) 1200px,
+            1920px"
+     alt="Responsive image example"&gt;</pre>
+
+            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+              <h4 class="font-bold text-blue-800 mb-2">Image Size Guidelines:</h4>
+              <ul class="text-sm text-gray-700 space-y-1">
+                <li>• Mobile: 320px, 640px widths</li>
+                <li>• Tablet: 768px, 1024px widths</li>
+                <li>• Desktop: 1280px, 1920px, 2560px widths</li>
+                <li>• Retina: Include 2x versions for high-DPI displays</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Section 5: Lazy Loading -->
+          <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Lazy Loading Images</h2>
+            
+            <p class="text-gray-700 mb-4">
+              Lazy loading defers loading of images until they're needed, significantly improving initial page load time.
+            </p>
+
+            <h3 class="text-xl font-semibold text-gray-700 mb-3">Native Lazy Loading (Easiest Method)</h3>
+            <pre class="bg-gray-800 text-white p-4 rounded overflow-x-auto text-sm mb-6">
+&lt;img src="image.jpg" loading="lazy" alt="Lazy loaded image"&gt;</pre>
+
+            <h3 class="text-xl font-semibold text-gray-700 mb-3">Intersection Observer API (More Control)</h3>
+            <pre class="bg-gray-800 text-white p-4 rounded overflow-x-auto text-sm mb-6">
+const images = document.querySelectorAll('img[data-src]');
+const imageObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      img.src = img.dataset.src;
+      imageObserver.unobserve(img);
+    }
+  });
+});
+
+images.forEach(img => imageObserver.observe(img));</pre>
+          </section>
+
+          <!-- Section 6: SEO Best Practices -->
+          <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Image SEO Best Practices</h2>
+            
+            <div class="space-y-4">
+              <div class="border-l-4 border-green-500 pl-4">
+                <h3 class="font-bold text-gray-800 mb-2">1. Descriptive File Names</h3>
+                <p class="text-gray-700 text-sm">
+                  ❌ Bad: IMG_1234.jpg<br>
+                  ✅ Good: red-running-shoes-nike-air-max.jpg
+                </p>
+              </div>
+
+              <div class="border-l-4 border-green-500 pl-4">
+                <h3 class="font-bold text-gray-800 mb-2">2. Alt Text</h3>
+                <p class="text-gray-700 text-sm mb-2">Always include descriptive alt text for accessibility and SEO:</p>
+                <pre class="bg-gray-100 p-2 rounded text-sm">
+&lt;img src="puppy.jpg" alt="Golden retriever puppy playing with a red ball in the park"&gt;</pre>
+              </div>
+
+              <div class="border-l-4 border-green-500 pl-4">
+                <h3 class="font-bold text-gray-800 mb-2">3. Image Sitemaps</h3>
+                <p class="text-gray-700 text-sm">Include images in your XML sitemap to help search engines discover them.</p>
+              </div>
+
+              <div class="border-l-4 border-green-500 pl-4">
+                <h3 class="font-bold text-gray-800 mb-2">4. Structured Data</h3>
+                <p class="text-gray-700 text-sm">Use schema.org markup for product images, recipes, articles, etc.</p>
+              </div>
+
+              <div class="border-l-4 border-green-500 pl-4">
+                <h3 class="font-bold text-gray-800 mb-2">5. Context Matters</h3>
+                <p class="text-gray-700 text-sm">Place images near relevant text content and use captions when appropriate.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 7: Tools and Automation -->
+          <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Tools for Image Optimization</h2>
+            
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <h3 class="font-bold text-gray-800 mb-3">Online Tools</h3>
+                <ul class="space-y-2 text-sm text-gray-700">
+                  <li>• <strong>Snap2Format:</strong> Convert and optimize between formats</li>
+                  <li>• <strong>TinyPNG:</strong> PNG and JPEG compression</li>
+                  <li>• <strong>Squoosh:</strong> Google's image optimizer</li>
+                  <li>• <strong>ImageOptim:</strong> Mac app for batch optimization</li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-800 mb-3">Build Tools</h3>
+                <ul class="space-y-2 text-sm text-gray-700">
+                  <li>• <strong>Webpack:</strong> image-webpack-loader</li>
+                  <li>• <strong>Gulp:</strong> gulp-imagemin</li>
+                  <li>• <strong>Sharp:</strong> Node.js image processing</li>
+                  <li>• <strong>ImageMagick:</strong> Command-line tool</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="bg-gray-100 p-4 rounded-lg">
+              <h3 class="font-bold text-gray-800 mb-2">CDN and Image Services</h3>
+              <p class="text-sm text-gray-700 mb-2">Consider using image CDNs for automatic optimization:</p>
+              <ul class="text-sm text-gray-700 space-y-1">
+                <li>• Cloudinary - On-the-fly transformations</li>
+                <li>• Imgix - Real-time image processing</li>
+                <li>• Cloudflare Images - Integrated CDN solution</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Performance Checklist -->
+          <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Image Optimization Checklist</h2>
+            
+            <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+              <ul class="space-y-3">
+                <li class="flex items-start">
+                  <input type="checkbox" class="mt-1 mr-3">
+                  <span class="text-gray-700">Choose the appropriate format (WebP > JPEG/PNG for photos)</span>
+                </li>
+                <li class="flex items-start">
+                  <input type="checkbox" class="mt-1 mr-3">
+                  <span class="text-gray-700">Compress images without noticeable quality loss</span>
+                </li>
+                <li class="flex items-start">
+                  <input type="checkbox" class="mt-1 mr-3">
+                  <span class="text-gray-700">Resize images to appropriate dimensions</span>
+                </li>
+                <li class="flex items-start">
+                  <input type="checkbox" class="mt-1 mr-3">
+                  <span class="text-gray-700">Implement responsive images with srcset</span>
+                </li>
+                <li class="flex items-start">
+                  <input type="checkbox" class="mt-1 mr-3">
+                  <span class="text-gray-700">Add lazy loading for below-the-fold images</span>
+                </li>
+                <li class="flex items-start">
+                  <input type="checkbox" class="mt-1 mr-3">
+                  <span class="text-gray-700">Use descriptive file names and alt text</span>
+                </li>
+                <li class="flex items-start">
+                  <input type="checkbox" class="mt-1 mr-3">
+                  <span class="text-gray-700">Serve images from a CDN</span>
+                </li>
+                <li class="flex items-start">
+                  <input type="checkbox" class="mt-1 mr-3">
+                  <span class="text-gray-700">Enable browser caching for images</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Conclusion -->
+          <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Conclusion</h2>
+            <p class="text-gray-700 mb-4">
+              Image optimization is not a one-time task but an ongoing process. As new formats emerge and 
+              browser support improves, continue to adapt your strategy. Remember, the goal is to deliver 
+              the best possible user experience while maintaining visual quality.
+            </p>
+            <p class="text-gray-700">
+              Start with the basics - compress your images, use the right formats, and implement lazy loading. 
+              Then gradually adopt more advanced techniques like responsive images and modern formats. Your 
+              users (and search rankings) will thank you!
+            </p>
+          </section>
+
+          <!-- CTA Section -->
+          <section class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg p-8 text-center">
+            <h2 class="text-2xl font-bold mb-4">Ready to Optimize Your Images?</h2>
+            <p class="mb-6">
+              Use Snap2Format to convert and optimize your images for the web. 
+              Support for 20+ formats including WebP and AVIF.
+            </p>
+            <a href="/" class="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+              Start Converting Now →
+            </a>
+          </section>
+        </div>
+
+        <!-- Article Footer -->
+        <footer class="mt-12 pt-8 border-t border-gray-200">
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Image Optimization</span>
+            <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Web Performance</span>
+            <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">SEO</span>
+            <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">WebP</span>
+            <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Responsive Images</span>
+          </div>
+          
+          <div class="flex justify-between items-center">
+            <p class="text-sm text-gray-600">
+              Written by <strong>Gourav Choudhary</strong>
+            </p>
+            <div class="flex space-x-4">
+              <button class="text-gray-600 hover:text-blue-600">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+                </svg>
+              </button>
+              <button class="text-gray-600 hover:text-blue-600">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </footer>
+      </article>
+
+      <!-- Related Articles -->
+      <section class="mt-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Related Articles</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          <a href="/blog/webp-to-jpg" class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-4">
+            <h3 class="font-bold text-gray-800 mb-2">WebP to JPG Conversion Guide</h3>
+            <p class="text-sm text-gray-600">Learn how to convert WebP images to JPG format.</p>
+          </a>
+          <a href="/blog/batch-image-conversion" class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-4">
+            <h3 class="font-bold text-gray-800 mb-2">Batch Image Conversion</h3>
+            <p class="text-sm text-gray-600">Convert multiple images at once efficiently.</p>
+          </a>
+          <a href="/blog/best-image-converter-tools" class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-4">
+            <h3 class="font-bold text-gray-800 mb-2">Best Image Converter Tools</h3>
+            <p class="text-sm text-gray-600">Compare top free image conversion tools.</p>
+          </a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8 md:py-12 mt-16">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2025 Snap2Format. Created by Gourav Choudhary. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

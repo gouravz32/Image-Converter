@@ -38,6 +38,29 @@ const outputDir = 'converted';
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
 
+// Create blog directory if it doesn't exist
+const blogDir = path.join(__dirname, 'blog');
+if (!fs.existsSync(blogDir)) {
+  fs.mkdirSync(blogDir);
+}
+
+// Only 2 blog files
+const blogFiles = [
+  'image-optimization-web.html',
+  'batch-image-conversion.html'
+];
+
+// Check which blog files exist in the blog folder
+console.log('\n📝 Checking blog files...');
+blogFiles.forEach(file => {
+  const filePath = path.join(blogDir, file);
+  if (!fs.existsSync(filePath)) {
+    console.log(`⌛ Missing: blog/${file}`);
+  } else {
+    console.log(`✅ Found: blog/${file}`);
+  }
+});
+
 // Serve converted files
 app.use('/downloads', express.static(path.join(__dirname, 'converted'), {
   maxAge: '2h',
@@ -45,6 +68,51 @@ app.use('/downloads', express.static(path.join(__dirname, 'converted'), {
     res.setHeader('Content-Disposition', 'attachment');
   }
 }));
+
+// ============= BLOG ROUTES START =============
+
+// Main blog index page route
+app.get('/blog.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
+// Alternative blog index route without .html
+app.get('/blog', (req, res) => {
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
+// Blog post route for Image Optimization
+app.get('/blog/image-optimization-web', (req, res) => {
+  const filePath = path.join(__dirname, 'blog', 'image-optimization-web.html');
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    console.error(`Blog file not found: ${filePath}`);
+    res.status(404).send('Blog post not found. Please add image-optimization-web.html to your blog folder.');
+  }
+});
+
+// Blog post route for Batch Image Conversion
+app.get('/blog/batch-image-conversion', (req, res) => {
+  const filePath = path.join(__dirname, 'blog', 'batch-image-conversion.html');
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    console.error(`Blog file not found: ${filePath}`);
+    res.status(404).send('Blog post not found. Please add batch-image-conversion.html to your blog folder.');
+  }
+});
+
+// Redirect routes for .html extensions (SEO friendly URLs)
+app.get('/blog/image-optimization-web.html', (req, res) => {
+  res.redirect(301, '/blog/image-optimization-web');
+});
+
+app.get('/blog/batch-image-conversion.html', (req, res) => {
+  res.redirect(301, '/blog/batch-image-conversion');
+});
+
+// ============= BLOG ROUTES END =============
 
 // Check ImageMagick installation
 let imageMagickAvailable = false;
@@ -696,10 +764,16 @@ Disallow: /uploads/
 Disallow: /converted/
 Crawl-delay: 1
 
-Sitemap: ${protocol}://${host}/sitemap.xml`);
+Sitemap: ${protocol}://${host}/sitemap.xml
+Host: ${host}
+Canonical: https://${host}/
+Author: Gourav Choudhary
+Publisher: Gourav Choudhary
+Lang: en
+`);
 });
 
-// Dynamic Sitemap
+// Dynamic Sitemap (Updated with only 2 blog posts)
 app.get('/sitemap.xml', (req, res) => {
   const host = req.get('host');
   const protocol = req.protocol === 'http' && host.includes('onrender.com') ? 'https' : req.protocol;
@@ -734,6 +808,21 @@ app.get('/sitemap.xml', (req, res) => {
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>${baseUrl}/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/blog/image-optimization-web</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/blog/batch-image-conversion</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>`);
 });
 
@@ -749,7 +838,36 @@ app.get('/health', (req, res) => {
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, 'index.html'));
+  // Check if it's a blog URL that wasn't matched
+  if (req.path.startsWith('/blog/')) {
+    res.status(404).send(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>404 - Blog Post Not Found | Snap2Format</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body class="bg-gray-50 min-h-screen flex items-center justify-center">
+        <div class="text-center p-8">
+          <h1 class="text-6xl font-bold text-gray-800 mb-4">404</h1>
+          <p class="text-xl text-gray-600 mb-8">Blog post not found</p>
+          <div class="space-x-4">
+            <a href="/blog" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+              View Blog
+            </a>
+            <a href="/" class="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700">
+              Go to Converter
+            </a>
+          </div>
+        </div>
+      </body>
+      </html>
+    `);
+  } else {
+    res.status(404).sendFile(path.join(__dirname, 'index.html'));
+  }
 });
 
 // Error handler
@@ -785,7 +903,10 @@ setInterval(() => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Snap2Format Image Converter running on port ${PORT}`);
-  console.log(`📍 Visit http://localhost:${PORT} to start converting images`);
+  console.log(`📝 Visit http://localhost:${PORT} to start converting images`);
+  console.log(`📚 Blog available at http://localhost:${PORT}/blog`);
+  console.log(`   - Image Optimization Guide`);
+  console.log(`   - Batch Conversion Tutorial`);
   console.log(`\n⚠️  Note: Some formats have limitations:`);
   console.log(`   - SVG works best with simple graphics`);
   console.log(`   - DJVU, XCF, CDR have limited support`);
